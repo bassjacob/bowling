@@ -21,6 +21,11 @@ description:         Please see the README on GitHub at <https://github.com/bass
 
 dependencies:
 - base >= 4.7 && < 5
+- text
+- warp
+- wai
+- http-types
+- bytestring
 
 library:
   source-dirs: src
@@ -46,3 +51,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - bowling
+    - hspec
