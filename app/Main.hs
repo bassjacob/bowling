@@ -2,7 +2,7 @@
 
 module Main where
 
-import Lib
+import Bowling.Lib
 
 import Network.Wai
 import Network.Wai.Handler.Warp
@@ -22,5 +22,6 @@ app req res = do
   body <- strictRequestBody req
   res $
     case (requestMethod req, pathInfo req) of
-      ("POST", ["scorecards"]) -> responseLBS status200 [plain] undefined
-      ("POST", ["scorecards/calculate"]) -> responseLBS status200 [plain] undefined
+      ("POST", ["scorecards"]) -> responseLBS status200 [json] undefined
+      ("POST", ["scorecards/calculate"]) -> responseLBS status200 [json] undefined
+      _ -> responseLBS status200 [plain] "not implemented"
