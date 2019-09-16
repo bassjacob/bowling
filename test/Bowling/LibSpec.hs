@@ -75,3 +75,8 @@ spec = do
   describe "newGame" $ do
     it "creates a new game with all frames set to pending" $ do
       newGame `shouldBe` unplayedGame
+  describe "isGameComplete" $ do
+    it "marks a complete game as complete" $ do
+      isGameComplete perfectCompleteGame `shouldBe` True
+    it "marks an incomplete game as not complete" $ do
+      isGameComplete perfectIncompleteGame `shouldBe` False
