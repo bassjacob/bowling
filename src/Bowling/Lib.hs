@@ -18,6 +18,16 @@ data Scorecard =
     Frame
   deriving (Show, Eq)
 
+listFrames :: Scorecard -> [Frame]
+listFrames (Scorecard f1 f2 f3 f4 f5 f6 f7 f8 f9 f10) = [f1, f2, f3, f4, f5, f6, f7, f8, f9, f10]
+
+data ScoredGame =
+  ScoredGame
+    { _scoredGameScore    ::  Int
+    , _scoredGameComplete :: Bool
+    , _scoredGameFrames   :: [(Int, Frame)]
+    } deriving (Show, Eq)
+
 newGame =
   Scorecard
     (NormalFrame Pending Pending)
@@ -39,20 +49,8 @@ isFrameComplete (FinalFrame _ Pending _) = False
 isFrameComplete (FinalFrame _ _ Pending) = False
 isFrameComplete _ = True
 
-isGameComplete :: Scorecard -> Bool
-isGameComplete (Scorecard f1 f2 f3 f4 f5 f6 f7 f8 f9 f10) =
-  foldr (&&) True
-    [ (isFrameComplete f1)
-    , (isFrameComplete f2)
-    , (isFrameComplete f3)
-    , (isFrameComplete f4)
-    , (isFrameComplete f5)
-    , (isFrameComplete f6)
-    , (isFrameComplete f7)
-    , (isFrameComplete f8)
-    , (isFrameComplete f9)
-    , (isFrameComplete f10)
-    ]
+isGameComplete :: [Frame] -> Bool
+isGameComplete = foldr ((&&) . isFrameComplete) True
 
 getValue :: Score -> Int
 getValue (Pindown i) = i
@@ -76,24 +74,21 @@ removeUnused = filter (\s -> s /= Unused)
 getScoresList (NormalFrame s1 s2) = [s1, s2]
 getScoresList (FinalFrame s1 s2 s3) = [s1, s2, s3]
 
-calculateFrame :: Frame -> Frame -> Frame -> Int
+calculateFrame :: Frame -> Frame -> Frame -> (Int, Frame)
 calculateFrame f1 f2 f3 =
-  addScores $ removeUnused $ [f1, f2, f3] >>= getScoresList
+  (addScores $ removeUnused $ [f1, f2, f3] >>= getScoresList, f1)
 
+foo frames = foldr (\a b -> (take 3 $ drop a frames ++ [(NormalFrame Unused Unused), (NormalFrame Unused Unused)]) : b) [] [0..9]
 
-calculateFrames :: Scorecard -> [Int]
-calculateFrames (Scorecard f1 f2 f3 f4 f5 f6 f7 f8 f9 f10) =
-  [ (calculateFrame f1 f2 f3)
-  , (calculateFrame f2 f3 f4)
-  , (calculateFrame f3 f4 f5)
-  , (calculateFrame f4 f5 f6)
-  , (calculateFrame f5 f6 f7)
-  , (calculateFrame f6 f7 f8)
-  , (calculateFrame f7 f8 f9)
-  , (calculateFrame f8 f9 f10)
-  , (calculateFrame f9 f10 (NormalFrame Unused Unused))
-  , (calculateFrame f10 (NormalFrame Unused Unused) (NormalFrame Unused Unused))
-  ]
+calculateFrames :: Scorecard -> ScoredGame
+calculateFrames scorecard =
+  let frames = listFrames scorecard;
+      permutations = foldr (\a b -> (take 3 $ drop a frames ++ [(NormalFrame Unused Unused), (NormalFrame Unused Unused)]) : b) [] [0..9];
+      calculatedFrames = foldr (\a b -> (calculateFrame (a !! 0) (a !! 1) (a !! 2)) : b) [] permutations;
+  in ScoredGame
+    (calculateScore calculatedFrames)
+    (isGameComplete frames)
+    calculatedFrames
 
-calculateScore :: Scorecard -> Int
-calculateScore scorecard = foldr (+) 0 $ calculateFrames scorecard
+calculateScore :: [(Int, Frame)] -> Int
+calculateScore = foldr ((+) . fst) 0
