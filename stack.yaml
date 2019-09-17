@@ -34,7 +34,12 @@ packages:
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
 #
-# extra-deps:
+extra-deps:
+- waargonaut-0.6.2.0@sha256:de0aea0d606a6c68a74be64bb799aa1e8db8ffff3ea7f2d55e228d4cfb96e7fe,11250
+- digit-0.7@sha256:d7e8252022d89cc962da29fdb54bdda54d997c2073b6977e6490b8bcd877650c,3919
+- hoist-error-0.2.1.0@sha256:25dba3c9472369f01defad260af30f3d585fb9e2c8775fe04e731a92bbbf7f29,1221
+- natural-0.3.0.4@sha256:c8246773a32240738a18b17b33b794e4fe0a6a41d45a78e9683b616280a8a799,2047
+- zippers-0.2.5@sha256:777ced8dcee5e76655b02bc29edc8a79fb247d2b29e2ba250bc1482505a31378,1973
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a

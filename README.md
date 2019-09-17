@@ -19,3 +19,7 @@ Once you have stack installed:
   * the application will run on port 3000
   * `POST /scorecards` will return you a new scorecard
   * `POST /scorecards/calculate` will calculate the score of the scorecard. If the game is complete it will give you the final score of the game as well
+
+I have included some fixture json files for you to manually test the server with {nonscoringgame,perfectGame,unplayedGame}.json. Assuming the server is running, you can use these as follows:
+
+`curl -XPOST --data "@filename.json" localhost:3000/scorecards/calculate`
